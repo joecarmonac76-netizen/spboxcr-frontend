@@ -4,19 +4,9 @@ import { useState } from 'react';
 import api from '../lib/api';
 import { 
   Search, 
-  Ship, 
-  MapPin, 
-  Calendar, 
-  AlertTriangle, 
-  CheckCircle, 
-  ArrowRight, 
-  Cpu, 
-  Loader2,
-  Box,
-  Anchor,
-  Truck,
-  Layers,
-  Compass
+  X,
+  ArrowRight,
+  Loader2
 } from 'lucide-react';
 
 export default function TrackingForm() {
@@ -39,267 +29,252 @@ export default function TrackingForm() {
     } catch (err: any) {
       console.error(err);
       setError(
-        'No se encontró información para el código provisto. Verifique el número de contenedor (ej: MSKU1234567).'
+        'Error: No se encontró información. Verifique el formato e intente nuevamente.'
       );
     } finally {
       setLoading(false);
     }
   };
 
-  const getTransportIcon = (transport: string) => {
-    if (!transport) return <Box className="h-4 w-4 text-slate-400" />;
-    const t = transport.toLowerCase();
-    if (t.includes('vessel') || t.includes('ship') || t.includes('barco')) {
-      return <Ship className="h-4 w-4 text-indigo-400" />;
-    }
-    if (t.includes('truck') || t.includes('camion') || t.includes('terrestre')) {
-      return <Truck className="h-4 w-4 text-emerald-400" />;
-    }
-    return <Box className="h-4 w-4 text-slate-400" />;
-  };
-
-  const getRiskBadge = (risk: string) => {
+  // Indicador de Riesgo / Alerta (Rojo, Amarillo, Verde clásico de Windows 95)
+  const getRiskStatus = (risk: string) => {
     switch (risk) {
       case 'HIGH':
-        return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 animate-pulse">Riesgo Alto</span>;
+        return (
+          <div className="flex items-center gap-2">
+            <span className="h-4 w-4 bg-red-600 border border-black inline-block shadow-inner"></span>
+            <span className="font-bold text-red-700 uppercase">[ALERTA ALTA]</span>
+          </div>
+        );
       case 'MEDIUM':
-        return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">Riesgo Medio</span>;
+        return (
+          <div className="flex items-center gap-2">
+            <span className="h-4 w-4 bg-yellow-400 border border-black inline-block shadow-inner"></span>
+            <span className="font-bold text-yellow-600 uppercase">[RIESGO MEDIO]</span>
+          </div>
+        );
       case 'LOW':
-        return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Riesgo Bajo</span>;
       default:
-        return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-500/20 text-slate-300 border border-slate-500/30">Riesgo Normal</span>;
+        return (
+          <div className="flex items-center gap-2">
+            <span className="h-4 w-4 bg-green-600 border border-black inline-block shadow-inner"></span>
+            <span className="font-bold text-green-700 uppercase">[RIESGO BAJO]</span>
+          </div>
+        );
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'CUSTOMS_RELEASED': return 'Aduana Liberado';
+      case 'IN_TRANSIT': return 'En Tránsito';
+      case 'DELAY_IN_PORT': return 'Demora Puerto';
+      case 'PORT_OF_ORIGIN': return 'Puerto de Salida';
+      case 'PORT_OF_DESTINATION': return 'Llegada a Puerto';
+      case 'DELIVERED': return 'Entregado';
+      default: return status.replace(/_/g, ' ');
     }
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 space-y-6">
-      {/* Tarjeta de Consulta */}
-      <div className="max-w-lg mx-auto bg-slate-900/80 backdrop-blur-md border border-slate-800 p-6 rounded-2xl shadow-xl transition-all duration-300 hover:border-slate-700">
-        <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-2">
-          <Ship className="h-5 w-5 text-indigo-500" />
-          Rastreo de Carga Inteligente
-        </h2>
-        <p className="text-sm text-slate-400 mb-6">
-          Ingrese el número de contenedor o BL de su envío para iniciar el seguimiento.
-        </p>
+    <div className="w-full max-w-4xl mx-auto px-4 py-8 bg-[#c0c0c0] text-black font-sans select-none border-2 border-t-white border-l-white border-b-black border-r-black">
+      
+      {/* WINDOW 1: Formulario de búsqueda (Retro Style) */}
+      <div className="bg-[#c0c0c0] border-2 border-t-white border-l-white border-b-[#808080] border-r-[#808080] mb-6 shadow-md">
+        {/* Title Bar */}
+        <div className="bg-[#000080] text-white font-bold text-xs px-2 py-1 flex items-center justify-between">
+          <span className="tracking-wide">SPBoxCR - Rastreo de Contenedores v1.0</span>
+          <button className="bg-[#c0c0c0] text-black border border-t-white border-l-white border-b-black border-r-black h-4 w-4 flex items-center justify-center text-[9px] font-bold pb-0.5 active:border-t-black active:border-l-black active:border-b-white active:border-r-white">
+            x
+          </button>
+        </div>
 
-        <form onSubmit={handleSearch} className="space-y-4">
-          <div className="relative">
-            <input
-              type="text"
-              required
-              className="w-full pl-4 pr-12 py-3.5 bg-slate-950/80 border border-slate-800 text-white rounded-xl placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-base uppercase"
-              placeholder="Ej: MSKU1234567"
-              value={containerNumber}
-              onChange={(e) => setContainerNumber(e.target.value)}
-            />
+        {/* Content */}
+        <div className="p-4 space-y-4">
+          <p className="text-xs font-semibold text-black">
+            Ingrese el número de contenedor (e.g. MEDU9837462) para iniciar el rastreo satelital.
+          </p>
+
+          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
+            {/* Recessed Input Box */}
+            <div className="flex-1 bg-white border-2 border-t-[#808080] border-l-[#808080] border-b-white border-r-white p-1">
+              <input
+                type="text"
+                required
+                className="w-full px-2 py-1.5 text-xs text-black font-mono focus:outline-none uppercase bg-white"
+                placeholder="Nº DE CONTENEDOR"
+                value={containerNumber}
+                onChange={(e) => setContainerNumber(e.target.value)}
+              />
+            </div>
+            {/* 3D Button */}
             <button
               type="submit"
               disabled={loading}
-              className="absolute right-2 top-2 p-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition-all disabled:opacity-50 flex items-center justify-center cursor-pointer"
+              className="bg-[#c0c0c0] text-black font-bold text-xs px-6 py-2 border-2 border-t-white border-l-white border-b-black border-r-black active:border-t-black active:border-l-black active:border-b-white active:border-r-white flex items-center justify-center gap-1.5 cursor-pointer"
             >
               {loading ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
+                <Loader2 className="h-3 w-3 animate-spin" />
               ) : (
-                <Search className="h-5 w-5" />
+                <span className="font-bold">Buscar</span>
               )}
             </button>
-          </div>
-        </form>
+          </form>
 
-        {/* Mensaje de Error Amigable */}
-        {error && (
-          <div className="mt-4 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-sm flex gap-3 animate-fadeIn">
-            <AlertTriangle className="h-5 w-5 text-rose-400 shrink-0 mt-0.5" />
-            <div>
-              <p className="font-semibold">Consulta Fallida</p>
-              <p className="text-rose-300/85 mt-0.5">{error}</p>
+          {error && (
+            <div className="bg-[#c0c0c0] border-2 border-t-[#808080] border-l-[#808080] border-b-white border-r-white p-3 text-xs text-red-800 font-mono">
+              [ERROR] {error}
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* RESULTADOS ENRIQUECIDOS */}
+      {/* WINDOW 2: Resultados consolidados */}
       {result && (
-        <div className="space-y-6 animate-fadeIn">
-          {/* Fila superior: Resumen rápido y Alerta de IA */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* 1. Datos del Contenedor */}
-            <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] bg-slate-950 border border-slate-800 text-indigo-400 font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                  Contenedor Activo
-                </span>
-                <h3 className="text-2xl font-black text-white mt-2 tracking-wide uppercase">{result.containerNumber}</h3>
-                <p className="text-xs text-slate-500 mt-1">Línea Naviera: <span className="text-slate-300 font-semibold">{result.carrier}</span></p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+        <div className="space-y-6">
+          
+          {/* WINDOW 2A: Ficha de Especificaciones & Timeline (Historial de Ruta) */}
+          <div className="bg-[#c0c0c0] border-2 border-t-white border-l-white border-b-[#808080] border-r-[#808080] shadow-md">
+            <div className="bg-[#000080] text-white font-bold text-xs px-2 py-1 flex items-center justify-between">
+              <span className="tracking-wide">Detalle de Contenedor & Historial de Ruta</span>
+              <span className="text-[10px] uppercase font-mono">Contenedor: {result.containerNumber}</span>
+            </div>
+
+            <div className="p-4 space-y-6">
+              {/* Resumen General en Panel 3D Inset */}
+              <div className="bg-white border-2 border-t-[#808080] border-l-[#808080] border-b-white border-r-white p-3 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono">
                 <div>
-                  <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Riesgo Operativo</p>
-                  <div className="mt-1">{getRiskBadge(result.riskLevel)}</div>
+                  <span className="text-slate-500 font-bold">Línea Naviera:</span>
+                  <p className="text-black font-bold mt-0.5">{result.carrier || 'Generic'}</p>
                 </div>
-                <div className="text-right">
-                  <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold">ETA de arribo</p>
-                  <p className="text-sm font-bold text-white mt-1">
-                    {result.eta ? new Date(result.eta).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
+                <div>
+                  <span className="text-slate-500 font-bold">Estado Actual:</span>
+                  <p className="text-black font-bold mt-0.5">{getStatusText(result.status)}</p>
+                </div>
+                <div>
+                  <span className="text-slate-500 font-bold">Estatus Alerta:</span>
+                  <div className="mt-0.5">{getRiskStatus(result.riskLevel)}</div>
+                </div>
+                <div>
+                  <span className="text-slate-500 font-bold">ETA Estimado:</span>
+                  <p className="text-black font-bold mt-0.5">
+                    {result.eta ? new Date(result.eta).toLocaleDateString('es-CR') : '-'}
                   </p>
                 </div>
               </div>
-            </div>
 
-            {/* 2. Asesoría de IA en tarjeta destacada */}
-            <div className="md:col-span-2 bg-gradient-to-br from-indigo-950/20 to-slate-900 border border-indigo-500/20 p-6 rounded-2xl shadow-xl flex flex-col justify-between relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none"></div>
-              
-              <div className="space-y-3">
-                <h4 className="text-xs font-bold text-indigo-400 flex items-center gap-1.5 uppercase tracking-wider">
-                  <Cpu className="h-4 w-4 animate-pulse text-indigo-400" />
-                  Asesoría Logística Senior
-                </h4>
-                <p className="text-sm text-slate-200 leading-relaxed italic bg-slate-950/40 p-4 rounded-xl border border-indigo-500/10">
-                  "{result.advisorAlert || 'Cargando análisis...'}"
-                </p>
-              </div>
-
-              <div className="mt-4 flex gap-4 overflow-x-auto pb-1">
-                {(result.recommendations || []).map((rec: string, idx: number) => (
-                  <div key={idx} className="flex gap-2 items-start shrink-0 max-w-[240px] bg-slate-950/50 p-2.5 rounded-lg border border-slate-800">
-                    <ArrowRight className="h-3 w-3 text-indigo-500 shrink-0 mt-0.5" />
-                    <span className="text-[10px] text-slate-400 leading-normal">{rec}</span>
+              {/* Ficha Técnica (Specs) */}
+              {result.specs && (
+                <div className="space-y-2">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-black border-b border-black pb-0.5">
+                    Especificaciones Técnicas del Equipo:
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px] font-mono">
+                    <div className="bg-[#c0c0c0] border border-t-[#808080] border-l-[#808080] border-b-white border-r-white p-2">
+                      <span className="text-slate-600 block text-[9px] font-bold uppercase">Tipo</span>
+                      <span className="text-black font-bold">{result.specs.type}</span>
+                    </div>
+                    <div className="bg-[#c0c0c0] border border-t-[#808080] border-l-[#808080] border-b-white border-r-white p-2 sm:col-span-1">
+                      <span className="text-slate-600 block text-[9px] font-bold uppercase">Dimensiones</span>
+                      <span className="text-black font-bold">{result.specs.dimension}</span>
+                    </div>
+                    <div className="bg-[#c0c0c0] border border-t-[#808080] border-l-[#808080] border-b-white border-r-white p-2">
+                      <span className="text-slate-600 block text-[9px] font-bold uppercase">Tara</span>
+                      <span className="text-black font-bold">{result.specs.tare}</span>
+                    </div>
+                    <div className="bg-[#c0c0c0] border border-t-[#808080] border-l-[#808080] border-b-white border-r-white p-2">
+                      <span className="text-slate-600 block text-[9px] font-bold uppercase">Carga Máxima</span>
+                      <span className="text-black font-bold">{result.specs.maxPayload}</span>
+                    </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
+
+              {/* Timeline Table */}
+              {result.timeline && result.timeline.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-black border-b border-black pb-0.5">
+                    Bitácora de Eventos de Tránsito y Transbordos:
+                  </h3>
+                  
+                  {/* Recessed Area containing the Windows 95 table */}
+                  <div className="bg-white border-2 border-t-[#808080] border-l-[#808080] border-b-white border-r-white overflow-x-auto">
+                    <table className="w-full text-left text-xs border-collapse font-mono min-w-[600px]">
+                      <thead>
+                        <tr className="bg-[#c0c0c0] border-b border-black text-black text-[10px] font-bold">
+                          <th className="py-1 px-2 border-r border-[#808080] shadow-[inset_1px_1px_0px_white]">Estado/Hito</th>
+                          <th className="py-1 px-2 border-r border-[#808080] shadow-[inset_1px_1px_0px_white]">Puerto / Locación</th>
+                          <th className="py-1 px-2 border-r border-[#808080] shadow-[inset_1px_1px_0px_white]">Fecha</th>
+                          <th className="py-1 px-2 border-r border-[#808080] shadow-[inset_1px_1px_0px_white]">Hora</th>
+                          <th className="py-1 px-2 border-r border-[#808080] shadow-[inset_1px_1px_0px_white]">Medio / Buque</th>
+                          <th className="py-1 px-2 shadow-[inset_1px_1px_0px_white] text-center">Viaje</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[#e0e0e0]">
+                        {result.timeline.map((evt: any, idx: number) => (
+                          <tr 
+                            key={idx} 
+                            className={`hover:bg-[#f0f0f0] ${
+                              evt.completed ? 'text-black font-semibold' : 'text-slate-400 italic'
+                            }`}
+                          >
+                            <td className="py-1.5 px-2 flex items-center gap-1.5">
+                              <span className={`inline-block h-3.5 w-3.5 border border-black ${
+                                evt.completed ? 'bg-green-600' : 'bg-slate-300'
+                              }`}></span>
+                              {evt.status}
+                            </td>
+                            <td className="py-1.5 px-2">{evt.place}</td>
+                            <td className="py-1.5 px-2">
+                              {evt.date ? new Date(evt.date).toLocaleDateString('es-CR') : '-'}
+                            </td>
+                            <td className="py-1.5 px-2">{evt.time}</td>
+                            <td className="py-1.5 px-2">{evt.transport}</td>
+                            <td className="py-1.5 px-2 text-center">{evt.voyage}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* FICHA 2: Especificaciones del Contenedor */}
-          {result.specs && (
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                <Box className="h-4 w-4 text-slate-500" />
-                Información de Ficha Técnica (Container Specs)
-              </h4>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
-                  <p className="text-[10px] text-slate-500 uppercase font-semibold">Tipo</p>
-                  <p className="text-sm font-bold text-white mt-0.5">{result.specs.type}</p>
-                </div>
-                <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/80 col-span-1 md:col-span-2">
-                  <p className="text-[10px] text-slate-500 uppercase font-semibold">Descripción del Equipo</p>
-                  <p className="text-sm font-bold text-white mt-0.5 truncate">{result.specs.description}</p>
-                </div>
-                <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
-                  <p className="text-[10px] text-slate-500 uppercase font-semibold">Tara (Tare)</p>
-                  <p className="text-sm font-bold text-white mt-0.5">{result.specs.tare}</p>
-                </div>
-                <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
-                  <p className="text-[10px] text-slate-500 uppercase font-semibold">Máx Carga Útil</p>
-                  <p className="text-sm font-bold text-white mt-0.5">{result.specs.maxPayload}</p>
-                </div>
-              </div>
+          {/* WINDOW 2B: Asesoría Logística de IA (MOSTRADO DESPUÉS DEL TIMELINE) */}
+          <div className="bg-[#c0c0c0] border-2 border-t-white border-l-white border-b-[#808080] border-r-[#808080] shadow-md">
+            <div className="bg-[#000080] text-white font-bold text-xs px-2 py-1 flex items-center justify-between">
+              <span className="tracking-wide">Asesoría de Inteligencia Artificial Logística</span>
+              <span className="text-[10px] font-mono">Status: OK</span>
             </div>
-          )}
 
-          {/* FICHA 3: Timeline e Historial de Movimientos */}
-          {result.timeline && result.timeline.length > 0 && (
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                <Compass className="h-4 w-4 text-slate-500" />
-                Historial de Ruta & Transbordos (Timeline)
-              </h4>
+            <div className="p-4 space-y-4">
+              {/* Alerta textual en Inset Box */}
+              <div className="bg-white border-2 border-t-[#808080] border-l-[#808080] border-b-white border-r-white p-3 text-xs leading-relaxed font-sans text-black">
+                <p className="font-bold text-[#000080] mb-1 font-mono">&gt; DIAGNÓSTICO DEL ASESOR:</p>
+                <p className="italic">"{result.advisorAlert || 'Cargando diagnóstico de precisión...'}"</p>
+              </div>
 
-              {/* Vista Tabla para Desktop */}
-              <div className="hidden md:block overflow-hidden rounded-xl border border-slate-800 bg-slate-950/40">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b border-slate-800 bg-slate-950 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                      <th className="py-3 px-4">Estado / Hito</th>
-                      <th className="py-3 px-4">Puerto / Locación</th>
-                      <th className="py-3 px-4">Fecha</th>
-                      <th className="py-3 px-4">Hora</th>
-                      <th className="py-3 px-4">Transporte</th>
-                      <th className="py-3 px-4 text-center">Viaje</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800/50 text-xs text-slate-300">
-                    {result.timeline.map((evt: any, index: number) => (
-                      <tr 
-                        key={index} 
-                        className={`hover:bg-slate-900/10 transition-all ${
-                          evt.completed ? 'text-slate-100 font-semibold' : 'text-slate-500 italic'
-                        }`}
+              {/* Recomendaciones específicas */}
+              {result.recommendations && result.recommendations.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs font-bold font-mono uppercase text-black">&gt; ACCIONES LOGÍSTICAS RECOMENDADAS:</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {result.recommendations.map((rec: string, idx: number) => (
+                      <div 
+                        key={idx} 
+                        className="bg-white border-2 border-t-[#808080] border-l-[#808080] border-b-white border-r-white p-2.5 text-[11px] leading-relaxed text-slate-800 flex gap-2 items-start"
                       >
-                        <td className="py-3.5 px-4 flex items-center gap-2">
-                          <div className={`h-2 w-2 rounded-full ${
-                            evt.completed ? 'bg-emerald-500 shadow-md shadow-emerald-500/50' : 'bg-slate-700'
-                          }`}></div>
-                          {evt.status}
-                        </td>
-                        <td className="py-3.5 px-4 font-mono">{evt.place}</td>
-                        <td className="py-3.5 px-4">
-                          {evt.date ? new Date(evt.date).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
-                        </td>
-                        <td className="py-3.5 px-4">{evt.time}</td>
-                        <td className="py-3.5 px-4 flex items-center gap-1.5">
-                          {getTransportIcon(evt.transport)}
-                          <span>{evt.transport}</span>
-                        </td>
-                        <td className="py-3.5 px-4 text-center font-semibold">{evt.voyage}</td>
-                      </tr>
+                        <span className="text-[#000080] font-bold">✔</span>
+                        <span>{rec}</span>
+                      </div>
                     ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Vista Tarjetas Compactas para Móvil */}
-              <div className="grid grid-cols-1 gap-4 md:hidden">
-                {result.timeline.map((evt: any, index: number) => (
-                  <div 
-                    key={index}
-                    className={`p-4 rounded-xl border flex flex-col gap-2.5 transition-all ${
-                      evt.completed 
-                        ? 'bg-slate-950/60 border-slate-800 text-slate-100' 
-                        : 'bg-slate-950/20 border-slate-900/50 text-slate-600 italic'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className={`h-2 w-2 rounded-full ${
-                          evt.completed ? 'bg-emerald-500' : 'bg-slate-800'
-                        }`}></div>
-                        <span className="text-xs font-bold uppercase">{evt.status}</span>
-                      </div>
-                      {evt.completed && (
-                        <span className="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded font-semibold">
-                          Realizado
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="text-xs grid grid-cols-2 gap-y-2 gap-x-4 border-t border-slate-800/40 pt-2 text-slate-400">
-                      <div>
-                        <p className="text-[9px] text-slate-600 uppercase font-semibold">Ubicación</p>
-                        <p className="font-semibold text-slate-200 mt-0.5">{evt.place}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-[9px] text-slate-600 uppercase font-semibold">Fecha y Hora</p>
-                        <p className="font-semibold text-slate-200 mt-0.5">
-                          {evt.date ? new Date(evt.date).toLocaleDateString('es-CR', { day: '2-digit', month: 'short' }) : '-'} a las {evt.time}
-                        </p>
-                      </div>
-                      <div className="col-span-2 border-t border-slate-800/40 pt-1.5 flex items-center justify-between">
-                        <div className="flex items-center gap-1.5">
-                          {getTransportIcon(evt.transport)}
-                          <span className="text-[10px]">{evt.transport}</span>
-                        </div>
-                        <span className="text-[10px] font-mono font-semibold">Viaje: {evt.voyage}</span>
-                      </div>
-                    </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
+
         </div>
       )}
     </div>
