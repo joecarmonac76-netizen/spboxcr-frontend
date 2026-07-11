@@ -59,24 +59,24 @@ export default function AdminDashboard() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'CUSTOMS_RELEASED':
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Aduana Liberado</span>;
+        return <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full bg-[#34c759]/10 text-[#34c759] border border-[#34c759]/20">Aduana Liberado</span>;
       case 'IN_TRANSIT':
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">En Tránsito</span>;
+        return <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full bg-[#0071e3]/10 text-[#0071e3] border border-[#0071e3]/20">En Tránsito</span>;
       case 'DELAY_IN_PORT':
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-md bg-rose-500/10 text-rose-400 border border-rose-500/20">Demora Puerto</span>;
+        return <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full bg-[#ff3b30]/10 text-[#ff3b30] border border-[#ff3b30]/20">Demora Puerto</span>;
       default:
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-md bg-slate-500/10 text-slate-400 border border-slate-500/20">{status}</span>;
+        return <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-700">{status}</span>;
     }
   };
 
   const getRiskIndicator = (risk: string) => {
     switch (risk) {
       case 'HIGH':
-        return <div className="h-2 w-2 rounded-full bg-rose-500 shadow-lg shadow-rose-500/50"></div>;
+        return <div className="h-2 w-2 rounded-full bg-[#ff3b30] shadow-md shadow-[#ff3b30]/50"></div>;
       case 'MEDIUM':
-        return <div className="h-2 w-2 rounded-full bg-amber-500 shadow-lg shadow-amber-500/50"></div>;
+        return <div className="h-2 w-2 rounded-full bg-[#ffcc00] shadow-md shadow-[#ffcc00]/50"></div>;
       default:
-        return <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50"></div>;
+        return <div className="h-2 w-2 rounded-full bg-[#34c759] shadow-md shadow-[#34c759]/50"></div>;
     }
   };
 
@@ -180,19 +180,19 @@ export default function AdminDashboard() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 pb-12 select-none relative">
+    <main className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] pb-12 font-sans select-none relative">
       {/* Header */}
-      <header className="border-b border-slate-900 bg-slate-950/50 backdrop-blur-md sticky top-0 z-20">
+      <header className="border-b border-[#d2d2d7]/50 bg-white/80 backdrop-blur-md sticky top-0 z-20">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/" className="p-2 hover:bg-slate-900 rounded-lg text-slate-400 hover:text-white transition-all">
+            <Link href="/" className="p-2 hover:bg-[#f5f5f7] rounded-full text-slate-500 hover:text-black transition-all">
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-lg tracking-wider text-white">
-                SPBOX<span className="text-indigo-500">CR</span>
+              <span className="font-bold text-lg tracking-tight text-[#1d1d1f]">
+                SPBOX<span className="text-[#0071e3]">CR</span>
               </span>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-semibold uppercase tracking-wider">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#0071e3]/10 text-[#0071e3] font-bold tracking-wide">
                 Admin
               </span>
             </div>
@@ -200,7 +200,7 @@ export default function AdminDashboard() {
 
           <button 
             onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-500 shadow-lg shadow-indigo-600/20 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-[#0071e3] rounded-full hover:bg-[#0077ed] shadow-sm shadow-[#0071e3]/10 transition-all cursor-pointer"
           >
             <Plus className="h-4 w-4" />
             <span>Nuevo Contenedor</span>
@@ -212,22 +212,22 @@ export default function AdminDashboard() {
       <section className="max-w-7xl mx-auto px-4 mt-8 space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-white">Monitoreo General de Cargas</h1>
-            <p className="text-xs text-slate-400 mt-1">Gestione, edite y notifique alertas de todos los contenedores logísticos.</p>
+            <h1 className="text-2xl font-extrabold text-[#1d1d1f]">Monitoreo General de Cargas</h1>
+            <p className="text-xs text-[#86868b] mt-1">Gestione, edite y notifique alertas de todos los contenedores logísticos.</p>
           </div>
 
           {/* Filtros */}
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-slate-500" />
-            <div className="bg-slate-900 border border-slate-800 p-1 rounded-lg flex gap-1">
+            <Filter className="h-4 w-4 text-slate-400" />
+            <div className="bg-white border border-[#d2d2d7]/50 p-1 rounded-xl flex gap-1 shadow-sm">
               {['ALL', 'IN_TRANSIT', 'DELAY_IN_PORT'].map((opt) => (
                 <button
                   key={opt}
                   onClick={() => setFilter(opt)}
-                  className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                     filter === opt 
-                      ? 'bg-slate-800 text-white font-bold' 
-                      : 'text-slate-500 hover:text-slate-300'
+                      ? 'bg-[#0071e3] text-white shadow-sm' 
+                      : 'text-slate-500 hover:text-slate-800'
                   }`}
                 >
                   {opt === 'ALL' ? 'Todos' : opt === 'IN_TRANSIT' ? 'En Tránsito' : 'Demora'}
@@ -242,43 +242,43 @@ export default function AdminDashboard() {
           {containers
             .filter((c) => filter === 'ALL' || c.status === filter)
             .map((c) => (
-              <div key={c.id} className="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl space-y-4">
+              <div key={c.id} className="bg-white border border-[#d2d2d7]/60 p-5 rounded-2xl space-y-4 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     {getRiskIndicator(c.risk)}
-                    <span className="font-bold text-white tracking-wide">{c.number}</span>
+                    <span className="font-bold text-[#1d1d1f] tracking-wide">{c.number}</span>
                   </div>
-                  <span className="text-xs text-slate-500">{c.carrier}</span>
+                  <span className="text-xs text-[#86868b] font-medium">{c.carrier}</span>
                 </div>
 
-                <div className="text-xs space-y-1 text-slate-400">
-                  <p><span className="font-semibold text-slate-500">Cliente:</span> {c.clientName}</p>
+                <div className="text-xs space-y-1 text-slate-500">
+                  <p><span className="font-bold text-[#1d1d1f]">Cliente:</span> {c.clientName}</p>
                 </div>
 
                 <div className="flex items-center justify-between text-sm">
                   <div className="space-y-0.5">
-                    <p className="text-xs text-slate-500 font-semibold">Estado</p>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Estado</p>
                     {getStatusBadge(c.status)}
                   </div>
                   <div className="space-y-0.5 text-right">
-                    <p className="text-xs text-slate-500 font-semibold">ETA Estimado</p>
-                    <p className="text-slate-300 font-medium">
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ETA Estimado</p>
+                    <p className="text-slate-800 font-bold">
                       {new Date(c.eta).toLocaleDateString('es-CR', { day: '2-digit', month: 'short' })}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex gap-2 pt-2 border-t border-slate-800/80">
+                <div className="flex gap-2 pt-2 border-t border-slate-100">
                   <button 
                     onClick={() => openNotifyModal(c)}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-semibold text-slate-300 bg-slate-950 hover:bg-slate-900 border border-slate-800 rounded-xl transition-all cursor-pointer"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold text-slate-700 bg-[#f5f5f7] border border-[#d2d2d7]/50 hover:bg-[#e8e8ed] rounded-xl transition-all cursor-pointer"
                   >
-                    <Bell className="h-3.5 w-3.5" />
+                    <Bell className="h-3.5 w-3.5 text-slate-500" />
                     Notificar
                   </button>
                   <button 
                     onClick={() => openEditModal(c)}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-semibold text-indigo-400 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 rounded-xl transition-all cursor-pointer"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold text-[#0071e3] bg-[#0071e3]/5 hover:bg-[#0071e3]/10 border border-[#0071e3]/10 rounded-xl transition-all cursor-pointer"
                   >
                     <Edit3 className="h-3.5 w-3.5" />
                     Editar
@@ -289,10 +289,10 @@ export default function AdminDashboard() {
         </div>
 
         {/* Contenedores (Desktop View: Table) */}
-        <div className="hidden sm:block overflow-hidden bg-slate-900/40 border border-slate-800 rounded-2xl shadow-xl">
+        <div className="hidden sm:block overflow-hidden bg-white border border-[#d2d2d7]/60 rounded-2xl shadow-sm">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-800/80 bg-slate-950/40 text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <tr className="border-b border-[#d2d2d7]/50 bg-[#f5f5f7] text-[10px] font-bold uppercase tracking-wider text-slate-500">
                 <th className="py-4 px-6">Contenedor</th>
                 <th className="py-4 px-6">Cliente</th>
                 <th className="py-4 px-6">Naviera</th>
@@ -301,21 +301,21 @@ export default function AdminDashboard() {
                 <th className="py-4 px-6 text-center">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/50 text-sm text-slate-300">
+            <tbody className="divide-y divide-[#d2d2d7]/30 text-sm text-slate-800">
               {containers
                 .filter((c) => filter === 'ALL' || c.status === filter)
                 .map((c) => (
-                  <tr key={c.id} className="hover:bg-slate-900/20 transition-all duration-150">
-                    <td className="py-4 px-6 font-semibold text-white">
+                  <tr key={c.id} className="hover:bg-slate-50/50 transition-all duration-150">
+                    <td className="py-4 px-6 font-bold text-[#1d1d1f]">
                       <div className="flex items-center gap-2.5">
                         {getRiskIndicator(c.risk)}
                         {c.number}
                       </div>
                     </td>
-                    <td className="py-4 px-6 text-slate-400">{c.clientName}</td>
-                    <td className="py-4 px-6 text-slate-400">{c.carrier}</td>
+                    <td className="py-4 px-6 text-slate-600 font-medium">{c.clientName}</td>
+                    <td className="py-4 px-6 text-slate-500">{c.carrier}</td>
                     <td className="py-4 px-6">{getStatusBadge(c.status)}</td>
-                    <td className="py-4 px-6 font-medium">
+                    <td className="py-4 px-6 font-bold">
                       {new Date(c.eta).toLocaleDateString('es-CR', {
                         day: '2-digit',
                         month: 'short',
@@ -323,17 +323,17 @@ export default function AdminDashboard() {
                       })}
                     </td>
                     <td className="py-4 px-6">
-                      <div className="flex items-center justify-center gap-3">
+                      <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => openNotifyModal(c)}
-                          className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all cursor-pointer"
+                          className="p-2 text-slate-500 hover:text-black hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                           title="Enviar Notificación"
                         >
                           <Bell className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => openEditModal(c)}
-                          className="p-2 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 rounded-lg transition-all cursor-pointer"
+                          className="p-2 text-[#0071e3] hover:bg-[#0071e3]/5 rounded-full transition-all cursor-pointer"
                           title="Editar Registro"
                         >
                           <Edit3 className="h-4 w-4" />
@@ -349,37 +349,37 @@ export default function AdminDashboard() {
 
       {/* MODAL 1: AÑADIR CONTENEDOR */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl p-6 relative animate-fadeIn">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-[#d2d2d7]/60 w-full max-w-lg rounded-2xl shadow-xl p-6 relative animate-fadeIn">
             <button 
               onClick={() => setIsAddModalOpen(false)}
-              className="absolute right-4 top-4 p-1.5 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white rounded-lg transition-all"
+              className="absolute right-4 top-4 p-1.5 hover:bg-[#f5f5f7] text-slate-400 hover:text-black rounded-full transition-all"
             >
               <X className="h-4 w-4" />
             </button>
             
-            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <Ship className="h-5 w-5 text-indigo-500" />
+            <h2 className="text-lg font-extrabold text-[#1d1d1f] mb-4 flex items-center gap-2">
+              <Ship className="h-5 w-5 text-[#0071e3]" />
               Agregar Nuevo Contenedor
             </h2>
 
             <form onSubmit={handleAddContainer} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-400 uppercase">Nº de Contenedor</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nº de Contenedor</label>
                   <input
                     type="text"
                     required
                     placeholder="Ej: MSKU1234567"
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 text-sm uppercase"
+                    className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm uppercase font-semibold"
                     value={newContainer.number}
                     onChange={(e) => setNewContainer({...newContainer, number: e.target.value})}
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-400 uppercase">Naviera (Carrier)</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Naviera</label>
                   <select
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-indigo-500 text-sm"
+                    className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-slate-950 focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm font-semibold"
                     value={newContainer.carrier}
                     onChange={(e) => setNewContainer({...newContainer, carrier: e.target.value})}
                   >
@@ -394,9 +394,9 @@ export default function AdminDashboard() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-400 uppercase">Estado Inicial</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Estado Inicial</label>
                   <select
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-indigo-500 text-sm"
+                    className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-slate-950 focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm font-semibold"
                     value={newContainer.status}
                     onChange={(e) => setNewContainer({...newContainer, status: e.target.value})}
                   >
@@ -407,11 +407,11 @@ export default function AdminDashboard() {
                   </select>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-400 uppercase">ETA Estimado</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ETA Estimado</label>
                   <input
                     type="date"
                     required
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-indigo-500 text-sm"
+                    className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm font-semibold"
                     value={newContainer.eta}
                     onChange={(e) => setNewContainer({...newContainer, eta: e.target.value})}
                   />
@@ -419,26 +419,26 @@ export default function AdminDashboard() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-400 uppercase">Nivel de Riesgo</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nivel de Riesgo</label>
                 <select
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-indigo-500 text-sm"
+                  className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-slate-950 focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm font-semibold"
                   value={newContainer.risk}
                   onChange={(e) => setNewContainer({...newContainer, risk: e.target.value})}
                 >
                   <option value="LOW">Bajo (Sin demoras)</option>
                   <option value="MEDIUM">Medio (Retraso menor)</option>
-                  <option value="HIGH">Alto (Congestión / Alerta)</option>
+                  <option value="HIGH">Alto (Alerta)</option>
                 </select>
               </div>
 
-              <div className="border-t border-slate-800/80 pt-4 space-y-3">
-                <p className="text-xs font-bold text-indigo-400 uppercase tracking-wide">Información del Cliente</p>
+              <div className="border-t border-[#e5e5ea] pt-4 space-y-3">
+                <p className="text-[10px] font-bold text-[#0071e3] uppercase tracking-wider">Información del Cliente</p>
                 <div className="space-y-2">
                   <input
                     type="text"
                     required
                     placeholder="Nombre del destinatario o empresa"
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white placeholder-slate-650 focus:outline-none focus:border-indigo-500 text-sm"
+                    className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm font-semibold"
                     value={newContainer.clientName}
                     onChange={(e) => setNewContainer({...newContainer, clientName: e.target.value})}
                   />
@@ -447,7 +447,7 @@ export default function AdminDashboard() {
                       type="text"
                       required
                       placeholder="WhatsApp (ej: +506 8888-8888)"
-                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white placeholder-slate-650 focus:outline-none focus:border-indigo-500 text-sm"
+                      className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm font-semibold"
                       value={newContainer.clientPhone}
                       onChange={(e) => setNewContainer({...newContainer, clientPhone: e.target.value})}
                     />
@@ -455,7 +455,7 @@ export default function AdminDashboard() {
                       type="email"
                       required
                       placeholder="Correo Electrónico"
-                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white placeholder-slate-650 focus:outline-none focus:border-indigo-500 text-sm"
+                      className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm font-semibold"
                       value={newContainer.clientEmail}
                       onChange={(e) => setNewContainer({...newContainer, clientEmail: e.target.value})}
                     />
@@ -467,16 +467,16 @@ export default function AdminDashboard() {
                 <button 
                   type="button" 
                   onClick={() => setIsAddModalOpen(false)}
-                  className="flex-1 py-2.5 bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-300 font-semibold rounded-xl text-sm transition-all cursor-pointer"
+                  className="flex-1 py-3 bg-[#f5f5f7] hover:bg-[#e8e8ed] text-slate-700 font-semibold rounded-xl text-xs transition-all cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit" 
-                  className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="flex-1 py-3 bg-[#0071e3] hover:bg-[#0077ed] text-white font-semibold rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm shadow-[#0071e3]/10"
                 >
                   <Save className="h-4 w-4" />
-                  Guardar Carga
+                  Guardar
                 </button>
               </div>
             </form>
@@ -486,24 +486,24 @@ export default function AdminDashboard() {
 
       {/* MODAL 2: EDITAR CONTENEDOR */}
       {isEditModalOpen && editingContainer && (
-        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl p-6 relative animate-fadeIn">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-[#d2d2d7]/60 w-full max-w-lg rounded-2xl shadow-xl p-6 relative animate-fadeIn">
             <button 
               onClick={() => setIsEditModalOpen(false)}
-              className="absolute right-4 top-4 p-1.5 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white rounded-lg transition-all"
+              className="absolute right-4 top-4 p-1.5 hover:bg-[#f5f5f7] text-slate-400 hover:text-black rounded-full transition-all"
             >
               <X className="h-4 w-4" />
             </button>
             
-            <h2 className="text-xl font-bold text-white mb-4 flex items-center justify-between">
+            <h2 className="text-lg font-extrabold text-[#1d1d1f] mb-4 flex items-center justify-between">
               <span className="flex items-center gap-2">
-                <Edit3 className="h-5 w-5 text-indigo-500" />
-                Editar Contenedor: {editingContainer.number}
+                <Edit3 className="h-5 w-5 text-[#0071e3]" />
+                Editar: {editingContainer.number}
               </span>
               <button 
                 type="button"
                 onClick={() => handleDeleteContainer(editingContainer.id)}
-                className="p-1.5 bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/25 rounded-lg transition-all mr-6 flex items-center gap-1 text-xs cursor-pointer"
+                className="p-1.5 bg-[#ff3b30]/10 border border-[#ff3b30]/20 text-[#ff3b30] hover:bg-[#ff3b30]/20 rounded-full transition-all mr-6 flex items-center gap-1 text-xs cursor-pointer px-3"
               >
                 <Trash2 className="h-3.5 w-3.5" />
                 Eliminar
@@ -513,9 +513,9 @@ export default function AdminDashboard() {
             <form onSubmit={handleEditContainer} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-400 uppercase">Naviera (Carrier)</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Naviera</label>
                   <select
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-indigo-500 text-sm"
+                    className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-[#1d1d1f] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm font-semibold"
                     value={editingContainer.carrier}
                     onChange={(e) => setEditingContainer({...editingContainer, carrier: e.target.value})}
                   >
@@ -527,9 +527,9 @@ export default function AdminDashboard() {
                   </select>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-400 uppercase">Riesgo</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Riesgo</label>
                   <select
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-indigo-500 text-sm"
+                    className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-[#1d1d1f] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm font-semibold"
                     value={editingContainer.risk}
                     onChange={(e) => setEditingContainer({...editingContainer, risk: e.target.value})}
                   >
@@ -542,9 +542,9 @@ export default function AdminDashboard() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-400 uppercase">Estatus Actual</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Estatus Actual</label>
                   <select
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-indigo-500 text-sm"
+                    className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-[#1d1d1f] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm font-semibold"
                     value={editingContainer.status}
                     onChange={(e) => setEditingContainer({...editingContainer, status: e.target.value})}
                   >
@@ -555,25 +555,25 @@ export default function AdminDashboard() {
                   </select>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-400 uppercase">ETA Estimado</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ETA Estimado</label>
                   <input
                     type="date"
                     required
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-indigo-500 text-sm"
+                    className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm font-semibold"
                     value={editingContainer.eta}
                     onChange={(e) => setEditingContainer({...editingContainer, eta: e.target.value})}
                   />
                 </div>
               </div>
 
-              <div className="border-t border-slate-800/80 pt-4 space-y-3">
-                <p className="text-xs font-bold text-indigo-400 uppercase tracking-wide">Información del Cliente</p>
+              <div className="border-t border-[#e5e5ea] pt-4 space-y-3">
+                <p className="text-[10px] font-bold text-[#0071e3] uppercase tracking-wider">Información del Cliente</p>
                 <div className="space-y-2">
                   <input
                     type="text"
                     required
                     placeholder="Nombre del destinatario"
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-indigo-500 text-sm"
+                    className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm font-semibold"
                     value={editingContainer.clientName}
                     onChange={(e) => setEditingContainer({...editingContainer, clientName: e.target.value})}
                   />
@@ -582,7 +582,7 @@ export default function AdminDashboard() {
                       type="text"
                       required
                       placeholder="Teléfono"
-                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-indigo-500 text-sm"
+                      className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm font-semibold"
                       value={editingContainer.clientPhone}
                       onChange={(e) => setEditingContainer({...editingContainer, clientPhone: e.target.value})}
                     />
@@ -590,7 +590,7 @@ export default function AdminDashboard() {
                       type="email"
                       required
                       placeholder="Correo"
-                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-indigo-500 text-sm"
+                      className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] text-sm font-semibold"
                       value={editingContainer.clientEmail}
                       onChange={(e) => setEditingContainer({...editingContainer, clientEmail: e.target.value})}
                     />
@@ -602,16 +602,16 @@ export default function AdminDashboard() {
                 <button 
                   type="button" 
                   onClick={() => setIsEditModalOpen(false)}
-                  className="flex-1 py-2.5 bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-300 font-semibold rounded-xl text-sm transition-all cursor-pointer"
+                  className="flex-1 py-3 bg-[#f5f5f7] hover:bg-[#e8e8ed] text-slate-700 font-semibold rounded-xl text-xs transition-all cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit" 
-                  className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="flex-1 py-3 bg-[#0071e3] hover:bg-[#0077ed] text-white font-semibold rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm shadow-[#0071e3]/10"
                 >
                   <Save className="h-4 w-4" />
-                  Actualizar Carga
+                  Actualizar
                 </button>
               </div>
             </form>
@@ -621,37 +621,37 @@ export default function AdminDashboard() {
 
       {/* MODAL 3: CONFIGURACIÓN DE NOTIFICACIONES */}
       {isNotifyModalOpen && notifyingContainer && (
-        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl p-6 relative animate-fadeIn">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-[#d2d2d7]/60 w-full max-w-lg rounded-2xl shadow-xl p-6 relative animate-fadeIn">
             <button 
               onClick={() => {
                 setIsNotifyModalOpen(false);
                 setNotifyingContainer(null);
               }}
-              className="absolute right-4 top-4 p-1.5 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white rounded-lg transition-all"
+              className="absolute right-4 top-4 p-1.5 hover:bg-[#f5f5f7] text-slate-400 hover:text-black rounded-full transition-all"
             >
               <X className="h-4 w-4" />
             </button>
             
-            <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-              <Bell className="h-5 w-5 text-amber-500 animate-ring" />
+            <h2 className="text-lg font-extrabold text-[#1d1d1f] mb-1 flex items-center gap-2">
+              <Bell className="h-5 w-5 text-[#ffcc00] animate-bounce" />
               Notificar Alerta: {notifyingContainer.number}
             </h2>
             <p className="text-xs text-slate-400 mb-4">
-              Configure la alerta logística personalizada para el cliente final de esta carga.
+              Configure la alerta logística personalizada para el cliente final.
             </p>
 
             <form onSubmit={handleSendNotification} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-400 uppercase">Canal de Envío</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Canal de Envío</label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
                     onClick={() => onChannelChange('WHATSAPP')}
-                    className={`py-2 px-3 rounded-lg border text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    className={`py-2.5 px-4 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                       notifyConfig.channel === 'WHATSAPP'
-                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                        ? 'bg-[#34c759]/10 border-[#34c759]/30 text-[#34c759]'
+                        : 'bg-[#f5f5f7] border-[#d2d2d7] text-slate-500 hover:text-black'
                     }`}
                   >
                     <MessageSquare className="h-4 w-4" />
@@ -660,10 +660,10 @@ export default function AdminDashboard() {
                   <button
                     type="button"
                     onClick={() => onChannelChange('EMAIL')}
-                    className={`py-2 px-3 rounded-lg border text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    className={`py-2.5 px-4 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                       notifyConfig.channel === 'EMAIL'
-                        ? 'bg-indigo-500/10 border-indigo-500/30 text-indigo-400'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                        ? 'bg-[#0071e3]/10 border-[#0071e3]/30 text-[#0071e3]'
+                        : 'bg-[#f5f5f7] border-[#d2d2d7] text-slate-500 hover:text-black'
                     }`}
                   >
                     <Mail className="h-4 w-4" />
@@ -673,22 +673,22 @@ export default function AdminDashboard() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-400 uppercase">Destinatario (Contacto)</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Destinatario (Contacto)</label>
                 <input
                   type="text"
                   required
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-slate-900 text-sm font-semibold focus:outline-none"
                   value={notifyConfig.contactInfo}
                   onChange={(e) => setNotifyConfig({...notifyConfig, contactInfo: e.target.value})}
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-400 uppercase">Cuerpo de la Alerta (Mensaje)</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Mensaje de Alerta</label>
                 <textarea
                   rows={4}
                   required
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm focus:outline-none focus:border-indigo-500 placeholder-slate-650 leading-relaxed resize-none"
+                  className="w-full px-3.5 py-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-slate-900 text-sm font-semibold focus:outline-none resize-none leading-relaxed"
                   value={notifyConfig.customMessage}
                   onChange={(e) => setNotifyConfig({...notifyConfig, customMessage: e.target.value})}
                 />
@@ -701,13 +701,13 @@ export default function AdminDashboard() {
                     setIsNotifyModalOpen(false);
                     setNotifyingContainer(null);
                   }}
-                  className="flex-1 py-2.5 bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-300 font-semibold rounded-xl text-sm transition-all cursor-pointer"
+                  className="flex-1 py-3 bg-[#f5f5f7] hover:bg-[#e8e8ed] text-slate-700 font-semibold rounded-xl text-xs transition-all cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit" 
-                  className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="flex-1 py-3 bg-[#0071e3] hover:bg-[#0077ed] text-white font-semibold rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm shadow-[#0071e3]/10"
                 >
                   <Send className="h-4 w-4" />
                   Enviar Alerta
