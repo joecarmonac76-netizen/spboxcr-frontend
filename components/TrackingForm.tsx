@@ -47,6 +47,7 @@ export default function TrackingForm() {
   };
 
   const getTransportIcon = (transport: string) => {
+    if (!transport) return <Box className="h-4 w-4 text-slate-400" />;
     const t = transport.toLowerCase();
     if (t.includes('vessel') || t.includes('ship') || t.includes('barco')) {
       return <Ship className="h-4 w-4 text-indigo-400" />;
@@ -140,7 +141,7 @@ export default function TrackingForm() {
                 <div className="text-right">
                   <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold">ETA de arribo</p>
                   <p className="text-sm font-bold text-white mt-1">
-                    {new Date(result.eta).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    {result.eta ? new Date(result.eta).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
                   </p>
                 </div>
               </div>
@@ -156,12 +157,12 @@ export default function TrackingForm() {
                   Asesoría Logística Senior
                 </h4>
                 <p className="text-sm text-slate-200 leading-relaxed italic bg-slate-950/40 p-4 rounded-xl border border-indigo-500/10">
-                  "{result.advisorAlert}"
+                  "{result.advisorAlert || 'Cargando análisis...'}"
                 </p>
               </div>
 
               <div className="mt-4 flex gap-4 overflow-x-auto pb-1">
-                {result.recommendations.map((rec: string, idx: number) => (
+                {(result.recommendations || []).map((rec: string, idx: number) => (
                   <div key={idx} className="flex gap-2 items-start shrink-0 max-w-[240px] bg-slate-950/50 p-2.5 rounded-lg border border-slate-800">
                     <ArrowRight className="h-3 w-3 text-indigo-500 shrink-0 mt-0.5" />
                     <span className="text-[10px] text-slate-400 leading-normal">{rec}</span>
@@ -172,129 +173,133 @@ export default function TrackingForm() {
           </div>
 
           {/* FICHA 2: Especificaciones del Contenedor */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-              <Box className="h-4 w-4 text-slate-500" />
-              Información de Ficha Técnica (Container Specs)
-            </h4>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-              <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
-                <p className="text-[10px] text-slate-500 uppercase font-semibold">Tipo</p>
-                <p className="text-sm font-bold text-white mt-0.5">{result.specs.type}</p>
-              </div>
-              <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/80 col-span-1 md:col-span-2">
-                <p className="text-[10px] text-slate-500 uppercase font-semibold">Descripción del Equipo</p>
-                <p className="text-sm font-bold text-white mt-0.5 truncate">{result.specs.description}</p>
-              </div>
-              <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
-                <p className="text-[10px] text-slate-500 uppercase font-semibold">Tara (Tare)</p>
-                <p className="text-sm font-bold text-white mt-0.5">{result.specs.tare}</p>
-              </div>
-              <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
-                <p className="text-[10px] text-slate-500 uppercase font-semibold">Máx Carga Útil</p>
-                <p className="text-sm font-bold text-white mt-0.5">{result.specs.maxPayload}</p>
+          {result.specs && (
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Box className="h-4 w-4 text-slate-500" />
+                Información de Ficha Técnica (Container Specs)
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
+                  <p className="text-[10px] text-slate-500 uppercase font-semibold">Tipo</p>
+                  <p className="text-sm font-bold text-white mt-0.5">{result.specs.type}</p>
+                </div>
+                <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/80 col-span-1 md:col-span-2">
+                  <p className="text-[10px] text-slate-500 uppercase font-semibold">Descripción del Equipo</p>
+                  <p className="text-sm font-bold text-white mt-0.5 truncate">{result.specs.description}</p>
+                </div>
+                <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
+                  <p className="text-[10px] text-slate-500 uppercase font-semibold">Tara (Tare)</p>
+                  <p className="text-sm font-bold text-white mt-0.5">{result.specs.tare}</p>
+                </div>
+                <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
+                  <p className="text-[10px] text-slate-500 uppercase font-semibold">Máx Carga Útil</p>
+                  <p className="text-sm font-bold text-white mt-0.5">{result.specs.maxPayload}</p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* FICHA 3: Timeline e Historial de Movimientos */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-              <Compass className="h-4 w-4 text-slate-500" />
-              Historial de Ruta & Transbordos (Timeline)
-            </h4>
+          {result.timeline && result.timeline.length > 0 && (
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Compass className="h-4 w-4 text-slate-500" />
+                Historial de Ruta & Transbordos (Timeline)
+              </h4>
 
-            {/* Vista Tabla para Desktop */}
-            <div className="hidden md:block overflow-hidden rounded-xl border border-slate-800 bg-slate-950/40">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-800 bg-slate-950 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                    <th className="py-3 px-4">Estado / Hito</th>
-                    <th className="py-3 px-4">Puerto / Locación</th>
-                    <th className="py-3 px-4">Fecha</th>
-                    <th className="py-3 px-4">Hora</th>
-                    <th className="py-3 px-4">Transporte</th>
-                    <th className="py-3 px-4 text-center">Viaje</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/50 text-xs text-slate-300">
-                  {result.timeline.map((evt: any, index: number) => (
-                    <tr 
-                      key={index} 
-                      className={`hover:bg-slate-900/10 transition-all ${
-                        evt.completed ? 'text-slate-100 font-semibold' : 'text-slate-500 italic'
-                      }`}
-                    >
-                      <td className="py-3.5 px-4 flex items-center gap-2">
-                        <div className={`h-2 w-2 rounded-full ${
-                          evt.completed ? 'bg-emerald-500 shadow-md shadow-emerald-500/50' : 'bg-slate-700'
-                        }`}></div>
-                        {evt.status}
-                      </td>
-                      <td className="py-3.5 px-4 font-mono">{evt.place}</td>
-                      <td className="py-3.5 px-4">
-                        {new Date(evt.date).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' })}
-                      </td>
-                      <td className="py-3.5 px-4">{evt.time}</td>
-                      <td className="py-3.5 px-4 flex items-center gap-1.5">
-                        {getTransportIcon(evt.transport)}
-                        <span>{evt.transport}</span>
-                      </td>
-                      <td className="py-3.5 px-4 text-center font-semibold">{evt.voyage}</td>
+              {/* Vista Tabla para Desktop */}
+              <div className="hidden md:block overflow-hidden rounded-xl border border-slate-800 bg-slate-950/40">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-800 bg-slate-950 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      <th className="py-3 px-4">Estado / Hito</th>
+                      <th className="py-3 px-4">Puerto / Locación</th>
+                      <th className="py-3 px-4">Fecha</th>
+                      <th className="py-3 px-4">Hora</th>
+                      <th className="py-3 px-4">Transporte</th>
+                      <th className="py-3 px-4 text-center">Viaje</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/50 text-xs text-slate-300">
+                    {result.timeline.map((evt: any, index: number) => (
+                      <tr 
+                        key={index} 
+                        className={`hover:bg-slate-900/10 transition-all ${
+                          evt.completed ? 'text-slate-100 font-semibold' : 'text-slate-500 italic'
+                        }`}
+                      >
+                        <td className="py-3.5 px-4 flex items-center gap-2">
+                          <div className={`h-2 w-2 rounded-full ${
+                            evt.completed ? 'bg-emerald-500 shadow-md shadow-emerald-500/50' : 'bg-slate-700'
+                          }`}></div>
+                          {evt.status}
+                        </td>
+                        <td className="py-3.5 px-4 font-mono">{evt.place}</td>
+                        <td className="py-3.5 px-4">
+                          {evt.date ? new Date(evt.date).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
+                        </td>
+                        <td className="py-3.5 px-4">{evt.time}</td>
+                        <td className="py-3.5 px-4 flex items-center gap-1.5">
+                          {getTransportIcon(evt.transport)}
+                          <span>{evt.transport}</span>
+                        </td>
+                        <td className="py-3.5 px-4 text-center font-semibold">{evt.voyage}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
-            {/* Vista Tarjetas Compactas para Móvil */}
-            <div className="grid grid-cols-1 gap-4 md:hidden">
-              {result.timeline.map((evt: any, index: number) => (
-                <div 
-                  key={index}
-                  className={`p-4 rounded-xl border flex flex-col gap-2.5 transition-all ${
-                    evt.completed 
-                      ? 'bg-slate-950/60 border-slate-800 text-slate-100' 
-                      : 'bg-slate-950/20 border-slate-900/50 text-slate-600 italic'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className={`h-2 w-2 rounded-full ${
-                        evt.completed ? 'bg-emerald-500' : 'bg-slate-800'
-                      }`}></div>
-                      <span className="text-xs font-bold uppercase">{evt.status}</span>
-                    </div>
-                    {evt.completed && (
-                      <span className="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded font-semibold">
-                        Realizado
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="text-xs grid grid-cols-2 gap-y-2 gap-x-4 border-t border-slate-800/40 pt-2 text-slate-400">
-                    <div>
-                      <p className="text-[9px] text-slate-600 uppercase font-semibold">Ubicación</p>
-                      <p className="font-semibold text-slate-200 mt-0.5">{evt.place}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[9px] text-slate-600 uppercase font-semibold">Fecha y Hora</p>
-                      <p className="font-semibold text-slate-200 mt-0.5">
-                        {new Date(evt.date).toLocaleDateString('es-CR', { day: '2-digit', month: 'short' })} a las {evt.time}
-                      </p>
-                    </div>
-                    <div className="col-span-2 border-t border-slate-900/30 pt-1.5 flex items-center justify-between">
-                      <div className="flex items-center gap-1.5">
-                        {getTransportIcon(evt.transport)}
-                        <span className="text-[10px]">{evt.transport}</span>
+              {/* Vista Tarjetas Compactas para Móvil */}
+              <div className="grid grid-cols-1 gap-4 md:hidden">
+                {result.timeline.map((evt: any, index: number) => (
+                  <div 
+                    key={index}
+                    className={`p-4 rounded-xl border flex flex-col gap-2.5 transition-all ${
+                      evt.completed 
+                        ? 'bg-slate-950/60 border-slate-800 text-slate-100' 
+                        : 'bg-slate-950/20 border-slate-900/50 text-slate-600 italic'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className={`h-2 w-2 rounded-full ${
+                          evt.completed ? 'bg-emerald-500' : 'bg-slate-800'
+                        }`}></div>
+                        <span className="text-xs font-bold uppercase">{evt.status}</span>
                       </div>
-                      <span className="text-[10px] font-mono font-semibold">Viaje: {evt.voyage}</span>
+                      {evt.completed && (
+                        <span className="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded font-semibold">
+                          Realizado
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="text-xs grid grid-cols-2 gap-y-2 gap-x-4 border-t border-slate-800/40 pt-2 text-slate-400">
+                      <div>
+                        <p className="text-[9px] text-slate-600 uppercase font-semibold">Ubicación</p>
+                        <p className="font-semibold text-slate-200 mt-0.5">{evt.place}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[9px] text-slate-600 uppercase font-semibold">Fecha y Hora</p>
+                        <p className="font-semibold text-slate-200 mt-0.5">
+                          {evt.date ? new Date(evt.date).toLocaleDateString('es-CR', { day: '2-digit', month: 'short' }) : '-'} a las {evt.time}
+                        </p>
+                      </div>
+                      <div className="col-span-2 border-t border-slate-800/40 pt-1.5 flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          {getTransportIcon(evt.transport)}
+                          <span className="text-[10px]">{evt.transport}</span>
+                        </div>
+                        <span className="text-[10px] font-mono font-semibold">Viaje: {evt.voyage}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </div>
